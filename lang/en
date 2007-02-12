@@ -1,0 +1,38 @@
+index_title=PHP Pear Modules
+index_epear=An error was detected on your system : $1. Maybe Pear is not installed, or the <a href='$2'>module configuration</a> is incorrect.
+index_mods=Installed Modules
+index_none=No Pear modules have been installed yet.
+index_name=Module name
+index_version=Version number
+index_pversion=PHP version
+index_state=Install state
+index_delete=Un-Install Selected Modules
+index_return=module list
+index_header=Install Pear module
+index_mod=Module to install
+index_ok=Install Now
+
+delete_title=Un-Install Modules
+delete_err=Failed to un-install modules
+delete_enone=None selected
+delete_rusure=Are you sure you want to un-install the $1 selected Pear modules?
+delete_ok=Un-Install Now
+delete_mods=Selected modules : $1
+delete_doing=Un-installing the selected PHP $1 Pear modules ..
+delete_failed=.. failed! See the error message above for the reason why.
+delete_done=.. un-install complete.
+
+install_title=Install Module
+install_doing=Installing the Pear module $1 for PHP $2 ..
+install_failed=.. failed! See the error message above for the reason why.
+install_done=.. install complete.
+
+view_title=Pear Module Details
+view_header=Details of module $1
+
+check_ecmd=The Pear command $1 was not found
+
+list_failed=Failed to fetch list of available modules : $1
+
+log_install=Installed Pear module $1
+log_delete=Un-installed Pear module(s) $1

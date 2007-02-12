@@ -1,0 +1,2 @@
+---- Changes since 1.320 ----
+Fixed available module list on Debian, to remove bogus pear/ prefixes.
