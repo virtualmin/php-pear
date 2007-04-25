@@ -49,8 +49,10 @@ else {
 
 sub get_php_version
 {
+&clean_environment();
 local $out = `php -v 2>&1`;
-return $out =~ /php\s+(\S+)/ ? $1 : undef;
+&reset_environment();
+return $out =~ /php\s+(\S+)/i ? $1 : undef;
 }
 
 sub get_pear_versions
