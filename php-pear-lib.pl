@@ -119,6 +119,7 @@ sub install_pear_module
 local ($name, $pver) = @_;
 local ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
 &clean_environment();
+&execute_command("$c->[0] channel-update pear.php.net");  # New protocol version
 local $out = &backquote_logged("$c->[0] install ".quotemeta($name));
 &reset_environment();
 return $? ? "<pre>$out</pre>" : undef;
