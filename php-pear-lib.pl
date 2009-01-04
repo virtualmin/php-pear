@@ -43,7 +43,7 @@ elsif ($pear5) {
 	return ( [ $pear5, 5 ] );
 	}
 else {
-	return ( [ &has_command("pear"), int(&get_php_version()) || 4 ] );
+	return ( [ $pear, int(&get_php_version()) || 4 ] );
 	}
 }
 
