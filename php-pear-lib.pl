@@ -43,7 +43,14 @@ elsif ($pear5) {
 	return ( [ $pear5, 5 ] );
 	}
 else {
-	return ( [ $pear, int(&get_php_version()) || 4 ] );
+	# Only the pear command exists .. but what version is it?
+	local $out = &backquote_command("$pear version </dev/null 2>&1");
+	if ($out =~ /PHP\s+Version:\s+(\d)/i) {
+		return ( [ $pear, $1 ] );
+		}
+	else {
+		return ( [ $pear, int(&get_php_version()) || 4 ] );
+		}
 	}
 }
 
