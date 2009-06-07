@@ -28,8 +28,8 @@ if (@mods) {
 			   lc($a->{'name'}) cmp lc($b->{'name'}) } @mods) {
 		print &ui_columns_row([
 			&ui_checkbox("d", $m->{'name'}."/".$m->{'pear'}),
-			"<a href='view.cgi?name=".&urlize($m->{'name'})."'>".
-			"$m->{'name'}</a>",
+			"<a href='view.cgi?name=".&urlize($m->{'name'}).
+			 "&version=".$m->{'pear'}."'>$m->{'name'}</a>",
 			$m->{'version'},
 			$m->{'pear'},
 			$m->{'state'} ], \@tds);

@@ -153,7 +153,7 @@ return $? ? "<pre>$out</pre>" : undef;
 # Returns a list of name-value tuples of info on a Pear module
 sub get_pear_module_info
 {
-local ($names, $pver) = @_;
+local ($name, $pver) = @_;
 local ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
 local @rv;
 &clean_environment();
@@ -161,8 +161,9 @@ local @rv;
 &reset_environment();
 while(<PEAR>) {
 	s/\r|\n//g;
-	next if (/About\s+(\S+)\-/i && lc($1) eq lc($name) || /====/);
-	if (/^(\S.{15})(\S.*)/) {
+	next if (/About\s+(\S+\/)?(\S+)\-/i && lc($2) eq lc($name) || /====/);
+	if (/^(\S.{14})\s(\S.*)/ ||
+	    /^(\S.{20})\s(\S.*)/) {
 		# Start of an entry
 		push(@rv, [ $1, $2 ]);
 		}
