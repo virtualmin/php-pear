@@ -3,10 +3,6 @@
 
 BEGIN { push(@INC, ".."); };
 eval "use WebminCore;";
-if ($@) {
-	do '../web-lib.pl';
-	do '../ui-lib.pl';
-	}
 &init_config();
 
 # check_pear()
