@@ -36,3 +36,4 @@ list_failed=Failed to fetch list of available modules : $1
 
 log_install=Installed Pear module $1
 log_delete=Un-installed Pear module(s) $1
+__norefs=1
