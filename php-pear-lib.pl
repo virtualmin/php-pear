@@ -22,36 +22,54 @@ sub get_pear_commands
 local $pear4 = &has_command($config{'pear'}."4");
 local $pear5 = &has_command($config{'pear'}."5");
 local $pear = &has_command($config{'pear'});
+local @rv;
 if ($pear4 && $pear5) {
 	# Two versions exist .. 
-	return ( [ $pear4, 4 ], [ $pear5, 5 ] );
+	@rv = ( [ $pear4, 4 ], [ $pear5, 5 ] );
 	}
 elsif ($pear && $pear4 && !&same_file($pear, $pear4)) {
 	# Both pear and pear4 exist .. assume that one is pear 5
-	return ( [ $pear4, 4 ], [ $pear, 5 ] );
+	@rv = ( [ $pear4, 4 ], [ $pear, 5 ] );
 	}
 elsif ($pear && $pear5 && !&same_file($pear, $pear5)) {
 	# Both pear and pear4 exist .. assume that one is pear 4
-	return ( [ $pear, 4 ], [ $pear5, 5 ] );
+	@rv = ( [ $pear, 4 ], [ $pear5, 5 ] );
 	}
 elsif ($pear4) {
 	# Only pear 4 exists
-	return ( [ $pear4, 4 ] );
+	@rv = ( [ $pear4, 4 ] );
 	}
 elsif ($pear5) {
 	# Only pear 5 exists
-	return ( [ $pear5, 5 ] );
+	@rv = ( [ $pear5, 5 ] );
 	}
 else {
 	# Only the pear command exists .. but what version is it?
 	local $out = &backquote_command("$pear version </dev/null 2>&1");
 	if ($out =~ /PHP\s+Version:\s+(\d)/i) {
-		return ( [ $pear, $1 ] );
+		@rv = ( [ $pear, $1 ] );
 		}
 	else {
-		return ( [ $pear, int(&get_php_version()) || 4 ] );
+		@rv = ( [ $pear, int(&get_php_version()) || 4 ] );
 		}
 	}
+
+# Add PHP 5.x versions
+foreach my $v ("5.3", "5.4") {
+	local $nodotv = $v;
+	$nodotv =~ s/\.//g;
+	foreach my $pearv ("pear$nodotv",
+			   "/opt/rh/php$nodotv/bin/pear",
+			   "/opt/rh/php$nodotv/root/usr/bin/pear") {
+		local $pearvpath = &has_command($pearv);
+		if ($pearvpath) {
+			push(@rv, [ $pearvpath, $v ]);
+			last;
+			}
+		}
+	}
+
+return @rv;
 }
 
 sub get_php_version
