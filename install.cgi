@@ -1,13 +1,16 @@
 #!/usr/local/bin/perl
 # Install one Pear module
+use strict;
+use warnings;
+our (%text, %in);
 
 require './php-pear-lib.pl';
 &ReadParse();
 &ui_print_header(undef, $text{'install_title'}, "");
-($mod, $pver) = split(/\//, $in{'mod'});
+my ($mod, $pver) = split(/\//, $in{'mod'});
 
 print &text('install_doing', "<tt>$mod</tt>", $pver),"<br>\n";
-$err = &install_pear_module($mod, $pver);
+my $err = &install_pear_module($mod, $pver);
 if ($err) {
 	print $err,"\n";
 	print $text{'install_failed'},"<br>\n";

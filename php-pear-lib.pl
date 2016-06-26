@@ -1,5 +1,8 @@
 # Functions for managing Pear
 # XXX multi-version support not done yet
+use strict;
+use warnings;
+our (%config);
 
 BEGIN { push(@INC, ".."); };
 eval "use WebminCore;";
@@ -19,10 +22,10 @@ return undef;
 # Returns a list of installed pear commands and versions
 sub get_pear_commands
 {
-local $pear4 = &has_command($config{'pear'}."4");
-local $pear5 = &has_command($config{'pear'}."5");
-local $pear = &has_command($config{'pear'});
-local @rv;
+my $pear4 = &has_command($config{'pear'}."4");
+my $pear5 = &has_command($config{'pear'}."5");
+my $pear = &has_command($config{'pear'});
+my @rv;
 if ($pear4 && $pear5) {
 	# Two versions exist .. 
 	@rv = ( [ $pear4, 4 ], [ $pear5, 5 ] );
@@ -45,7 +48,7 @@ elsif ($pear5) {
 	}
 else {
 	# Only the pear command exists .. but what version is it?
-	local $out = &backquote_command("$pear version </dev/null 2>&1");
+	my $out = &backquote_command("$pear version </dev/null 2>&1");
 	if ($out =~ /PHP\s+Version:\s+(\d)/i) {
 		@rv = ( [ $pear, $1 ] );
 		}
@@ -56,12 +59,12 @@ else {
 
 # Add PHP 5.x versions
 foreach my $v ("5.3", "5.4") {
-	local $nodotv = $v;
+	my $nodotv = $v;
 	$nodotv =~ s/\.//g;
 	foreach my $pearv ("pear$nodotv",
 			   "/opt/rh/php$nodotv/bin/pear",
 			   "/opt/rh/php$nodotv/root/usr/bin/pear") {
-		local $pearvpath = &has_command($pearv);
+		my $pearvpath = &has_command($pearv);
 		if ($pearvpath) {
 			push(@rv, [ $pearvpath, $v ]);
 			last;
@@ -75,7 +78,7 @@ return @rv;
 sub get_php_version
 {
 &clean_environment();
-local $out = &backquote_command("php -v 2>&1 </dev/null");
+my $out = &backquote_command("php -v 2>&1 </dev/null");
 &reset_environment();
 return $out =~ /PHP\s+([0-9\.]+)/ ? $1 : undef;
 }
@@ -89,9 +92,10 @@ return map { $_->[1] } &get_pear_commands();
 # Returns a list of Pear modules that are currently installed, as a hash array
 sub list_installed_pear_modules
 {
-local @rv;
+my @rv;
 foreach my $c (&get_pear_commands()) {
 	&clean_environment();
+	no strict "subs";
 	&open_execute_command(PEAR, "$c->[0] list", 1);
 	&reset_environment();
 	while(<PEAR>) {
@@ -103,6 +107,7 @@ foreach my $c (&get_pear_commands()) {
 			}
 		}
 	close(PEAR);
+	use strict "subs";
 	}
 return @rv;
 }
@@ -112,10 +117,11 @@ return @rv;
 # the list cannot be fetched
 sub list_available_pear_modules
 {
-local @rv;
-local $out;
+my @rv;
+my $out;
 foreach my $c (&get_pear_commands()) {
 	&clean_environment();
+	no strict "subs"; # XXX Lexical?
 	&open_execute_command(PEAR, "$c->[0] list-all", 1);
 	&reset_environment();
 	while(<PEAR>) {
@@ -129,6 +135,7 @@ foreach my $c (&get_pear_commands()) {
 		$out .= $_;
 		}
 	close(PEAR);
+	use strict "subs";
 	if ($?) {
 		&error(&text('list_failed', "<pre>$out</pre>"));
 		}
@@ -141,11 +148,11 @@ return @rv;
 # error message on failure
 sub install_pear_module
 {
-local ($name, $pver) = @_;
-local ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
+my ($name, $pver) = @_;
+my ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
 &clean_environment();
 &execute_command("$c->[0] channel-update pear.php.net");  # New protocol version
-local $out = &backquote_logged("$c->[0] install ".quotemeta($name));
+my $out = &backquote_logged("$c->[0] install ".quotemeta($name));
 &reset_environment();
 return $? ? "<pre>$out</pre>" : undef;
 }
@@ -154,10 +161,10 @@ return $? ? "<pre>$out</pre>" : undef;
 # Removes the specified modules, returning undef if OK or an error message
 sub uninstall_pear_modules
 {
-local ($names, $pver) = @_;
-local ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
+my ($names, $pver) = @_;
+my ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
 &clean_environment();
-local $out = &backquote_logged("$c->[0] uninstall ".
+my $out = &backquote_logged("$c->[0] uninstall ".
 		join(" ", map { quotemeta($_) } @$names));
 &reset_environment();
 return $? ? "<pre>$out</pre>" : undef;
@@ -167,11 +174,12 @@ return $? ? "<pre>$out</pre>" : undef;
 # Returns a list of name-value tuples of info on a Pear module
 sub get_pear_module_info
 {
-local ($name, $pver) = @_;
-local ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
+my ($name, $pver) = @_;
+my ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
 $c || &error("No pear command found for PHP version $pver");
-local @rv;
+my @rv;
 &clean_environment();
+no strict "subs";
 &open_execute_command(PEAR, "$c->[0] info ".quotemeta($name), 1);
 &reset_environment();
 while(<PEAR>) {
@@ -188,6 +196,7 @@ while(<PEAR>) {
 		}
 	}
 close(PEAR);
+use strict "subs";
 return @rv;
 }
 
