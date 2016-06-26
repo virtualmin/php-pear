@@ -169,6 +169,7 @@ sub get_pear_module_info
 {
 local ($name, $pver) = @_;
 local ($c) = grep { $_->[1] eq $pver } &get_pear_commands();
+$c || &error("No pear command found for PHP version $pver");
 local @rv;
 &clean_environment();
 &open_execute_command(PEAR, "$c->[0] info ".quotemeta($name), 1);
