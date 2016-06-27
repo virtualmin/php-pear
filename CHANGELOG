@@ -1,2 +1,6 @@
 ---- Changes since 1.320 ----
 Fixed available module list on Debian, to remove bogus pear/ prefixes.
+---- Changes since 1.5 ----
+use strict and use warnings enabled on all Perl code
+Some PHP multi-version support (still incomplete) added
+Fixed bug that led to "info" command being run instead of "php info"

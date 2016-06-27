@@ -1,3 +1,5 @@
+use strict;
+us warnings;
 
 do 'php-pear-lib.pl';
 

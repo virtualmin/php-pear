@@ -1,4 +1,6 @@
 # install_check.pl
+use strict;
+use warnings;
 
 do 'php-pear-lib.pl';
 
@@ -8,7 +10,7 @@ do 'php-pear-lib.pl';
 # For mode 0, returns 1 if installed, 0 if not
 sub is_installed
 {
-local $err = &check_pear();
+my $err = &check_pear();
 return $err ? 0 :
        $_[0] ? 2 : 1;
 }

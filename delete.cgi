@@ -1,22 +1,25 @@
 #!/usr/local/bin/perl
 # Delete a bunch of Pear modules, after asking for confirmation
+use strict;
+use warnings;
+our (%text, %in);
 
 require './php-pear-lib.pl';
 &ReadParse();
 &error_setup($text{'delete_err'});
-@d = split(/\0/, $in{'d'});
+my @d = split(/\0/, $in{'d'});
 @d || &error($text{'delete_enone'});
-@dinfo = map { [ split(/\//, $_) ] } @d;
+my @dinfo = map { [ split(/\//, $_) ] } @d;
 &ui_print_header(undef, $text{'delete_title'}, "");
 
 if ($in{'confirm'}) {
 	# Work out what versions are involved
-	@vers = &unique(map { $_->[1] } @dinfo);
-	foreach $pver (@vers) {
+	my @vers = &unique(map { $_->[1] } @dinfo);
+	foreach my $pver (@vers) {
 		# Do it!
 		print &text('delete_doing', $pver),"<br>\n";
-		@names = map { $_->[0] } grep { $_->[1] == $pver } @dinfo;
-		$err = &uninstall_pear_modules(\@names, $pver);
+		my @names = map { $_->[0] } grep { $_->[1] == $pver } @dinfo;
+		my $err = &uninstall_pear_modules(\@names, $pver);
 		if ($err) {
 			print $err,"\n";
 			print $text{'delete_failed'},"<br>\n";
@@ -30,7 +33,7 @@ if ($in{'confirm'}) {
 else {
 	# Ask first
 	print &ui_form_start("delete.cgi", "post");
-	foreach $d (@d) {
+	foreach my $d (@d) {
 		print &ui_hidden("d", $d),"\n";
 		}
 	print "<center>\n";
