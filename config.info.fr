@@ -1,0 +1,1 @@
+pear=Chemin complet vers la commande Pear,0
