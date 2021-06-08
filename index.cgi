@@ -30,13 +30,13 @@ if (@mods) {
 				  $text{'index_state'} ]);
 	foreach my $m (sort { $a->{'pear'} <=> $b->{'pear'} ||
 			   lc($a->{'name'}) cmp lc($b->{'name'}) } @mods) {
-		print &ui_columns_row([
-			&ui_checkbox("d", $m->{'name'}."/".$m->{'pear'}),
+		print &ui_checked_columns_row([
 			"<a href='view.cgi?name=".&urlize($m->{'name'}).
 			 "&version=".$m->{'pear'}."'>$m->{'name'}</a>",
 			$m->{'version'},
 			$m->{'pear'},
-			$m->{'state'} ], \@tds);
+			$m->{'state'} ], \@tds, "d",
+			$m->{'name'}."/".$m->{'pear'});
 		}
 	print &ui_columns_end();
 	print &ui_links_row(\@links);
