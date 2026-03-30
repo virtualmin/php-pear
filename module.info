@@ -1,2 +1,4 @@
 desc=PHP Pear Modules
-version=1.6
+version=1.7.0
+rpm_recommends=php-pear
+deb_recommends=php-pear
