@@ -1,4 +1,4 @@
-name: "virtualmin.dev: virtualmin/php-pear"
+name: Build
 
 on:
   push:
